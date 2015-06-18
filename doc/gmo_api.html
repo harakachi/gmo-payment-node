@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><title>gmo_api</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="gmo_api"><meta name="groc-project-path" content="src/gmo_api.coffee"><meta name="groc-github-url" content="https://github.com/neuer-sieg/gmo-payment-node"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/neuer-sieg/gmo-payment-node/blob/master/src/gmo_api.coffee">src/gmo_api.coffee</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper">https = <span class="hljs-built_in">require</span> <span class="hljs-string">"https"</span>
+querystring = <span class="hljs-built_in">require</span> <span class="hljs-string">"querystring"</span>
+iconv = <span class="hljs-built_in">require</span> <span class="hljs-string">"iconv"</span>
+Const = <span class="hljs-built_in">require</span> <span class="hljs-string">"./const"</span>
+
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">GMOAPI</span></span>
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(options = {})</span> -&gt;</span>
+    <span class="hljs-property">@host</span> = options.host
+
+  <span class="hljs-attribute">api</span>: <span class="hljs-function"><span class="hljs-params">(path, options_param, cb)</span> -&gt;</span>
+    params = <span class="hljs-property">@replaceParams</span>(options_param)
+    path = <span class="hljs-string">"/payment/<span class="hljs-subst">#{path}</span>"</span>
+    post_data = querystring.stringify(params)
+    options =
+      <span class="hljs-attribute">host</span>: <span class="hljs-property">@host</span>
+      <span class="hljs-attribute">path</span>: path
+      <span class="hljs-attribute">method</span>: <span class="hljs-string">"POST"</span>
+      <span class="hljs-attribute">port</span>: <span class="hljs-number">443</span>
+      <span class="hljs-attribute">headers</span>:
+        <span class="hljs-string">"Content-Type"</span>: <span class="hljs-string">"application/x-www-form-urlencoded"</span>
+        <span class="hljs-string">"Content-Length"</span>: post_data.length
+    req = https.request(options, <span class="hljs-function"><span class="hljs-params">(res)</span> -&gt;</span>
+      res.setEncoding <span class="hljs-string">"utf8"</span>
+      res.<span class="hljs-literal">on</span> <span class="hljs-string">"data"</span>, <span class="hljs-function"><span class="hljs-params">(chunk)</span> -&gt;</span>
+        <span class="hljs-built_in">console</span>.log <span class="hljs-string">"BODY: "</span> + chunk
+    )
+    req.<span class="hljs-literal">on</span> <span class="hljs-string">"error"</span>, <span class="hljs-function"><span class="hljs-params">(e)</span> -&gt;</span>
+      <span class="hljs-built_in">console</span>.log <span class="hljs-string">"problem with request: "</span> + e.message
+      cb e, <span class="hljs-literal">null</span>
+    req.<span class="hljs-literal">on</span> <span class="hljs-string">"response"</span>, <span class="hljs-function"><span class="hljs-params">(res)</span> -&gt;</span>
+      response = <span class="hljs-string">""</span>
+      res.setEncoding <span class="hljs-string">"utf8"</span>
+      res.<span class="hljs-literal">on</span> <span class="hljs-string">"data"</span>, <span class="hljs-function"><span class="hljs-params">(chunk)</span> -&gt;</span>
+        response += chunk
+      res.<span class="hljs-literal">on</span> <span class="hljs-string">"end"</span>, <span class="hljs-function">-&gt;</span>
+        err = <span class="hljs-literal">null</span>
+        conv = <span class="hljs-keyword">new</span> iconv.Iconv(<span class="hljs-string">"SHIFT_JIS"</span>, <span class="hljs-string">"UTF-8"</span>)
+        <span class="hljs-keyword">try</span>
+          response = conv.convert(response).toString()
+        <span class="hljs-keyword">catch</span> error
+          <span class="hljs-built_in">console</span>.log <span class="hljs-string">"ConvertError: <span class="hljs-subst">#{error}</span> <span class="hljs-subst">#{response}</span>"</span>
+        response = querystring.parse(response)
+        response.httpStatusCode = res.statusCode
+        <span class="hljs-keyword">if</span> response[<span class="hljs-string">"ErrCode"</span>] || response[<span class="hljs-string">"ErrInfo"</span>]
+          err = <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"An error occured"</span>)
+          err.response = response
+          err.httpStatusCode = res.statusCode
+          response = <span class="hljs-literal">null</span>
+        <span class="hljs-keyword">unless</span> err
+          <span class="hljs-keyword">if</span> res.statusCode &lt; <span class="hljs-number">200</span> <span class="hljs-keyword">or</span> res.statusCode &gt;= <span class="hljs-number">300</span>
+            err = <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"Response Status : "</span> + res.statusCode)
+            err.response = response
+            err.httpStatusCode = res.statusCode
+            response = <span class="hljs-literal">null</span>
+        cb err, response
+    req.write post_data
+    req.end()
+
+  <span class="hljs-attribute">assertRequiredOptions</span>: <span class="hljs-function"><span class="hljs-params">(required, options)</span> -&gt;</span>
+    missing = []
+    required.forEach (val) -&gt;
+      missing.push val  <span class="hljs-keyword">unless</span> val <span class="hljs-keyword">of</span> options
+    <span class="hljs-keyword">if</span> missing.length &gt; <span class="hljs-number">0</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"ArgumentError: Required <span class="hljs-subst">#{missing.join(<span class="hljs-string">', '</span>)}</span> were not provided."</span>)
+
+  <span class="hljs-attribute">replaceParams</span>: <span class="hljs-function"><span class="hljs-params">(params)</span> -&gt;</span>
+    new_params = {}
+    conv = <span class="hljs-keyword">new</span> iconv.Iconv(<span class="hljs-string">"UTF-8"</span>, <span class="hljs-string">"SHIFT_JIS"</span>)
+    <span class="hljs-keyword">for</span> key <span class="hljs-keyword">of</span> params
+      <span class="hljs-keyword">try</span>
+        new_params[Const[key]] = conv.convert(<span class="hljs-string">"<span class="hljs-subst">#{params[key]}</span>"</span>).toString()
+      <span class="hljs-keyword">catch</span> error
+        new_params[Const[key]] = <span class="hljs-string">"<span class="hljs-subst">#{params[key]}</span>"</span>
+    <span class="hljs-keyword">return</span> new_params
+
+<span class="hljs-built_in">module</span>.exports.GMOAPI = GMOAPI</div></div></div></div></body></html>

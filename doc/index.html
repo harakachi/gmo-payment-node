@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><meta name="groc-github-url" content="https://github.com/neuer-sieg/gmo-payment-node"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/neuer-sieg/gmo-payment-node/blob/master/README.md">README.md</a></div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="gmo">GMO</h1>
+<p><a href="http://badge.fury.io/js/gmo"><img src="https://badge.fury.io/js/gmo.png" alt="NPM version"></a>
+<a href="https://travis-ci.org/t-k/gmo-payment-node"><img src="https://travis-ci.org/t-k/gmo-payment-node.png" alt="Build Status"></a>
+<a href="http://david-dm.org/t-k/gmo-payment-node"><img src="https://david-dm.org/t-k/gmo-payment-node/status.png" alt="Dependency Status"></a></p>
+<p>GMO is a Node.js client library for the GMO Payment Platform, supporting the PG Multi Payment API, exec transactions, register users, and so on.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="lang-bash">npm install gmo</code></pre>
+<h2 id="usage">Usage</h2>
+<pre><code class="lang-javascript"><span class="hljs-keyword">var</span> gmo, option, shopApi;
+
+gmo = <span class="hljs-built_in">require</span>(<span class="hljs-string">"gmo"</span>);
+
+shopApi = <span class="hljs-keyword">new</span> gmo.ShopAPI({
+  host:      <span class="hljs-string">"hoge.mul-pay.jp"</span>,
+  shop_id:   <span class="hljs-string">"shop_id"</span>,
+  shop_pass: <span class="hljs-string">"shop_pass"</span>
+});
+
+option = {
+  order_id: <span class="hljs-string">"order_id"</span>,
+  job_cd:   <span class="hljs-string">"AUTH"</span>,
+  amount:   <span class="hljs-string">"100"</span>
+};
+
+shopApi.entryTran(option, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, res</span>) </span>{
+  <span class="hljs-keyword">if</span> (err) {
+    <span class="hljs-built_in">console</span>.log(err);
+  }
+  <span class="hljs-keyword">if</span> (res) {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">console</span>.log(res);
+  }
+});</code></pre>
+<p>More examples are available on <a href="https://github.com/t-k/gmo-payment-node/tree/master/test">test directory</a>.</p>
+<h2 id="shop-api">Shop API</h2>
+<p>In this library, we have defined as &quot;Shop API&quot; an API that requires shop ID and shop password to the API call.</p>
+<h2 id="site-api">Site API</h2>
+<p>An API that requires site ID and site password to the API call.</p>
+<h2 id="shopandsite-api">ShopAndSite API</h2>
+<p>An API that requires shop ID, shop password, site ID and site password to the API call.</p>
+<h2 id="in-other-languages">In other languages</h2>
+<ul>
+<li><a href="https://github.com/t-k/gmo-payment-ruby">GMO Payment Ruby</a></li>
+</ul>
+<h2 id="contributors">Contributors</h2>
+<p>Patches contributed by <a href="https://github.com/t-k/gmo-payment-node/contributors">those people</a>.</p></div></div></div></div></body></html>

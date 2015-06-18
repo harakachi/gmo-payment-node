@@ -1,5 +1,5 @@
 {
   "glob": ["src/*.coffee", "README.md"],
-  "github": true,
+  "github": false,
   "repository-url": "https://github.com/neuer-sieg/gmo-payment-node"
 }
