@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><title>site_api</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="site_api"><meta name="groc-project-path" content="src/site_api.coffee"><meta name="groc-github-url" content="https://github.com/t-k/gmo-payment-node"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path"><a href="https://github.com/t-k/gmo-payment-node/blob/master/src/site_api.coffee">src/site_api.coffee</a></div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper">utils = <span class="hljs-built_in">require</span> <span class="hljs-string">"./utils"</span>
+gmo = <span class="hljs-built_in">require</span> <span class="hljs-string">"./gmo_api"</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>SiteAPI
+-
+GMO moduleでは、API呼び出しにGMOから与えられたサイトID、サイトパスが必要になるAPIをSite APIと定義しています。 主にカードや会員に関する操作を担っているAPI群となります。 取引登録、決済ステータス変更等、決済に関するAPIが主です。</p>
+<p>初期化の際には、GMOから指定されたサイトID、サイトパス、APIのホスト名を引数で渡す必要があります。</p></div></div><div class="code"><div class="wrapper"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SiteAPI</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">gmo</span>.<span class="hljs-title">GMOAPI</span></span>
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(options = {})</span> -&gt;</span>
+    <span class="hljs-property">@host</span>      = options.host
+    <span class="hljs-property">@site_id</span>   = options.site_id
+    <span class="hljs-property">@site_pass</span> = options.site_pass
+    <span class="hljs-keyword">unless</span> <span class="hljs-property">@site_id</span> &amp;&amp; <span class="hljs-property">@site_pass</span> &amp;&amp; <span class="hljs-property">@host</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Error(<span class="hljs-string">"ArgumentError: Initialize must receive a hash with site_id, site_pass and either host!"</span>)</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2321">2.3.2.1.会員登録</h2>
+<h3 id="savemember">saveMember</h3>
+<p>以降の決済取引で必要となる取引 ID と取引パスワードの発行を行い、取引を開始します。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">saveMember</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"SaveMember.idPass"</span>
+    required = [<span class="hljs-string">"member_id"</span>]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2421">2.4.2.1.会員更新</h2>
+<h3 id="updatemember">updateMember</h3>
+<p>指定されたサイトに会員情報を更新します。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">updateMember</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"UpdateMember.idPass"</span>
+    required = [<span class="hljs-string">"member_id"</span>]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2521">2.5.2.1.会員削除</h2>
+<h3 id="deletemember">deleteMember</h3>
+<p>指定したサイトから会員情報を削除します。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">deleteMember</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"DeleteMember.idPass"</span>
+    required = [<span class="hljs-string">"member_id"</span>]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2621">2.6.2.1.会員参照</h2>
+<h3 id="searchmember">searchMember</h3>
+<p>指定したサイトの会員情報を参照します。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">searchMember</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"SearchMember.idPass"</span>
+    required = [<span class="hljs-string">"member_id"</span>]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2721">2.7.2.1.カード登録/更新</h2>
+<h3 id="savecard">saveCard</h3>
+<p>指定した会員にカード情報を登録します。尚、サイトに設定されたショップ ID を使用してカード会社と通信を行い有効性の確認を行います。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">saveCard</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"SaveCard.idPass"</span>
+    required = [
+      <span class="hljs-string">"member_id"</span>
+      <span class="hljs-string">"card_no"</span>
+      <span class="hljs-string">"expire"</span>
+    ]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2821">2.8.2.1.カード削除</h2>
+<h3 id="deletecard">deleteCard</h3>
+<p>指定した会員のカード情報を削除します。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">deleteCard</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"DeleteCard.idPass"</span>
+    required = [
+      <span class="hljs-string">"member_id"</span>
+      <span class="hljs-string">"card_seq"</span>
+    ]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="2921">2.9.2.1.カード参照</h2>
+<h3 id="searchcard">searchCard</h3>
+<p>お客様が選択したカード登録連番のカード情報を取得します。 カード情報が本人認証サービスに対応していない場合は、カード会社との通信を行い決済を実行します。その際の出力パラメータは「2.10.2.3決済実行」の出力パラメータと同じになります。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">searchCard</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"SearchCard.idPass"</span>
+    required = [
+      <span class="hljs-string">"member_id"</span>
+      <span class="hljs-string">"card_seq"</span>
+      <span class="hljs-string">"seq_mode"</span>
+    ]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb</div></div></div><div class="segment"><div class="comments "><div class="wrapper"><h2 id="21123-">2.11.2.3. 決済実行</h2>
+<h3 id="exectran">execTran</h3>
+<p>お客様が選択したカード登録連番のカード情報を取得します。 カード情報が本人認証サービスに対応していない場合は、カード会社との通信を行い決済を実行します。その際の出力パラメータは「2.10.2.3決済実行」の出力パラメータと同じになります。</p>
+<p><code>@param {Object} options</code></p>
+<p><code>@param {Function} cb</code></p></div></div><div class="code"><div class="wrapper">  <span class="hljs-attribute">execTran</span>: <span class="hljs-function"><span class="hljs-params">(options, cb)</span> -&gt;</span>
+    name = <span class="hljs-string">"ExecTran.idPass"</span>
+    required = [
+      <span class="hljs-string">"access_id"</span>
+      <span class="hljs-string">"access_pass"</span>
+      <span class="hljs-string">"order_id"</span>
+      <span class="hljs-string">"member_id"</span>
+      <span class="hljs-string">"card_seq"</span>
+    ]
+    <span class="hljs-property">@assertRequiredOptions</span> required, options
+    <span class="hljs-property">@apiCall</span> name, options, cb
+
+  <span class="hljs-attribute">apiCall</span>: <span class="hljs-function"><span class="hljs-params">(name, options, cb)</span> -&gt;</span>
+    extra_params =
+      <span class="hljs-string">"site_id"</span>: <span class="hljs-property">@site_id</span>
+      <span class="hljs-string">"site_pass"</span>: <span class="hljs-property">@site_pass</span>
+    params = utils.extend(options, extra_params)
+    <span class="hljs-property">@api</span> name, params, cb
+
+<span class="hljs-built_in">module</span>.exports = SiteAPI</div></div></div></div></body></html>
