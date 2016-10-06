@@ -84,6 +84,7 @@ class SiteAPI extends gmo.GMOAPI
       "member_id"
       "card_no"
       "expire"
+      "default_flag"
     ]
     @assertRequiredOptions required, options
     @apiCall name, options, cb
