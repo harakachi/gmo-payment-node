@@ -82,8 +82,7 @@ class SiteAPI extends gmo.GMOAPI
     name = "SaveCard.idPass"
     required = [
       "member_id"
-      "card_no"
-      "expire"
+      "token"
       "default_flag"
     ]
     @assertRequiredOptions required, options
