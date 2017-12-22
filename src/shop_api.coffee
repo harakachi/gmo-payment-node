@@ -51,7 +51,6 @@ class ShopAPI extends gmo.GMOAPI
       "access_id"
       "access_pass"
       "order_id"
-      "token"
     ]
     @assertRequiredOptions required, options
     @apiCall name, options, cb
