@@ -55,6 +55,78 @@ class ShopAPI extends gmo.GMOAPI
     @assertRequiredOptions required, options
     @apiCall name, options, cb
 
+  # 2.3.2.1.会員登録
+  # ---
+  # ###saveMember
+  # 指定されたサイトに会員を登録します。
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  saveMember: (options, cb) ->
+    name = "SaveMember.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
+  # 2.4.2.1.会員更新
+  # ---
+  # ###updateMember
+  # 指定されたサイトに会員情報を更新します。
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  updateMember: (options, cb) ->
+    name = "UpdateMember.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
+  # 2.5.2.1.会員削除
+  # ---
+  # ###deleteMember
+  # 指定されたサイトから会員情報を削除します。
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  deleteMember: (options, cb) ->
+    name = "DeleteMember.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
+  # 2.6.2.1.会員参照
+  # ---
+  # ###searchMember
+  # 指定したサイトの会員情報を参照します。
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  searchMember: (options, cb) ->
+    name = "SearchMember.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
   # 2.7.2.1.カード登録／更新
   # ---
   # ###saveCard
