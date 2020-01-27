@@ -3,6 +3,8 @@ querystring = require "querystring"
 iconv = require "iconv-lite"
 Const = require "./const"
 
+iconv.skipDecodeWarning = true;
+
 class GMOAPI
   constructor: (options = {}) ->
     @host = options.host
