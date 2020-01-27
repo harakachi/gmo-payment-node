@@ -36,9 +36,8 @@ class GMOAPI
         response += chunk
       res.on "end", ->
         err = null
-        conv = iconv.decode("SHIFT_JIS", "UTF-8")
         try
-          response = conv.convert(response).toString()
+          response = iconv.decode(response, "sjis").toString()
         catch error
           console.log "ConvertError: #{error} #{response}"
         response = querystring.parse(response)
@@ -67,10 +66,9 @@ class GMOAPI
 
   replaceParams: (params) ->
     new_params = {}
-    conv = new iconv.decode("UTF-8", "SHIFT_JIS")
     for key of params
       try
-        new_params[Const[key]] = conv.convert("#{params[key]}").toString()
+        new_params[Const[key]] = iconv.encode("#{params[key]}", "sjis").toString()
       catch error
         new_params[Const[key]] = "#{params[key]}"
     return new_params
