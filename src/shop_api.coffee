@@ -55,6 +55,62 @@ class ShopAPI extends gmo.GMOAPI
     @assertRequiredOptions required, options
     @apiCall name, options, cb
 
+  # 2.7.2.1.カード登録／更新
+  # ---
+  # ###saveCard
+  # 指定した会員にカード情報を登録します。尚、サイトに設定されたショップID を使用してカード会社と通信を行い有効性の確認を行います
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  saveCard: (options, cb) ->
+    name = "SaveCard.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
+  # 2.8.2.1.カード削除
+  # ---
+  # ###deleteCard
+  # 指定した会員のカード情報を削除します。
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  deleteCard: (options, cb) ->
+    name = "DeleteCard.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+      "card_seq"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
+  # 2.9.2.1.カード参照
+  # ---
+  # ###searchCard
+  # 指定した会員のカード情報を参照します。
+  #
+  # ```@param {Object} options```
+  #
+  # ```@param {Function} cb```
+  searchCard: (options, cb) ->
+    name = "SearchCard.idPass"
+    required = [
+      "site_id"
+      "site_pass"
+      "member_id"
+      "seq_mode"
+    ]
+    @assertRequiredOptions required, options
+    @apiCall name, options, cb
+
   # 2.14.2.1.決済変更
   # ---
   # ###alterTran
