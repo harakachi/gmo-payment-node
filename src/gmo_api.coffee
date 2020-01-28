@@ -46,13 +46,13 @@ class GMOAPI
           err = new Error("An error occured")
           err.response = response
           err.httpStatusCode = res.statusCode
-          response = null
+          # response = null
         unless err
           if res.statusCode < 200 or res.statusCode >= 300
             err = new Error("Response Status : " + res.statusCode)
             err.response = response
             err.httpStatusCode = res.statusCode
-            response = null
+            # response = null
         cb err, response
     req.write post_data
     req.end()
